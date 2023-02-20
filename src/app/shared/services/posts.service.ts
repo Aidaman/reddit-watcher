@@ -17,6 +17,8 @@ enum PostBanAction {
 export class PostsService {
 	private readonly store: Store = inject(Store);
 
+	public lastPostName: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
 	public favoritePostsSource: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>(
 		this.getPostsByCategory(LocalStoragePostsCategory.favorites)
 	);

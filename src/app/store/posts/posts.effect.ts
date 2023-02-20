@@ -3,6 +3,9 @@ import {
 	fetchPostsAction,
 	fetchPostsSuccessAction,
 	fetchPostsFailureAction,
+	fetchMorePostsAction,
+	fetchMorePostsSuccessAction,
+	fetchMorePostsFailureAction,
 } from './posts.actions';
 import { createEffect } from '@ngrx/effects';
 import { Actions, ofType } from '@ngrx/effects';
@@ -26,6 +29,29 @@ export class PostsEffect {
 		)
 	);
 
+	public fetchMorePosts$ = createEffect(() =>
+		this.actions$.pipe(
+			ofType(fetchMorePostsAction),
+			switchMap(({ subredditName, lastPostName, limit }) =>
+				this.defineMorePostsQuerry(subredditName, lastPostName, limit)
+			)
+		)
+	);
+
+	private defineMorePostsQuerry(
+		subredditName: string | null,
+		lastPostName: string,
+		limit: number
+	) {
+		console.log(subredditName);
+
+		const querry: Observable<IPost[]> = !subredditName
+			? this.httpService.getMoreHomepagePosts(lastPostName, limit)
+			: this.httpService.getMoreSubredditPosts('r/' + subredditName, lastPostName, limit);
+
+		return this.decorateMoreQuerry(querry);
+	}
+
 	private defineHttpQuerry(subredditName: string | null, isRandom?: boolean) {
 		if (isRandom) return this.decorateQuerry(this.httpService.getRandomSubredditPosts());
 
@@ -41,6 +67,14 @@ export class PostsEffect {
 			map((value: IPost[]) => this.postsService.excludeBannedPosts(value)),
 			map(posts => fetchPostsSuccessAction({ posts })),
 			catchError(() => of(fetchPostsFailureAction))
+		);
+	}
+
+	private decorateMoreQuerry(querry: Observable<IPost[]>) {
+		return querry.pipe(
+			map((value: IPost[]) => this.postsService.excludeBannedPosts(value)),
+			map(posts => fetchMorePostsSuccessAction({ posts })),
+			catchError(() => of(fetchMorePostsFailureAction))
 		);
 	}
 }

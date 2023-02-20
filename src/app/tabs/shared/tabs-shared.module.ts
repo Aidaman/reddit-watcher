@@ -5,9 +5,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { IsFavoritePipe } from './is-favorite/is-favorite.pipe';
+import { ScrollTrackDirective } from './scroll/scroll-track.directive';
 
 @NgModule({
-	declarations: [PostsComponent, PostItemComponent, LoaderComponent, IsFavoritePipe],
+	declarations: [
+		PostsComponent,
+		PostItemComponent,
+		LoaderComponent,
+		IsFavoritePipe,
+		ScrollTrackDirective,
+	],
 	exports: [PostsComponent, PostItemComponent, LoaderComponent],
 	imports: [CommonModule, IonicModule],
 })

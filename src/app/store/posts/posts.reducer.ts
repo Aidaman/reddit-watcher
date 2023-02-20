@@ -7,23 +7,36 @@ import {
 	fetchPostsFailureAction,
 	addPostAction,
 	removePostAction,
+	fetchMorePostsAction,
+	fetchMorePostsFailureAction,
+	fetchMorePostsSuccessAction,
 } from './posts.actions';
 
 export interface IPostsState {
 	posts: IPost[];
 	isLoading: boolean;
+	isLoadingMore: boolean;
 	hasValue: boolean;
 }
 
 const initialState: IPostsState = {
 	posts: [],
 	isLoading: false,
+	isLoadingMore: false,
 	hasValue: false,
 };
 
 const addPost = (post: IPost, list: IPost[]): IPost[] => {
 	const res: IPost[] = [...list];
 	res.push(post);
+	return res;
+};
+
+const addPosts = (posts: IPost[], list: IPost[]) => {
+	if (posts[0].data.id === list[0].data.id) return list;
+
+	const res: IPost[] = [...list];
+	res.push(...posts);
 	return res;
 };
 
@@ -49,6 +62,22 @@ export const postsReducer = createReducer(
 		...state,
 		isLoading: false,
 		hasValue: false,
+	})),
+
+	on(fetchMorePostsAction, (state, action) => ({
+		...state,
+		isLoadingMore: true,
+	})),
+
+	on(fetchMorePostsSuccessAction, (state, action) => ({
+		...state,
+		posts: addPosts(action.posts, state.posts),
+		isLoadingMore: false,
+	})),
+
+	on(fetchMorePostsFailureAction, (state, action) => ({
+		...state,
+		isLoadingMore: false,
 	})),
 
 	on(addPostAction, (state, action) => ({

@@ -3,6 +3,7 @@
 }
 
 ion-list {
+	position: relative;
   	height: 100%;
   	width: 100%;
 
@@ -11,5 +12,12 @@ ion-list {
   	}
 
   	overflow-y: auto;
+
+	app-loader {
+		position: sticky;
+		bottom: 10%;
+		left: 50%;
+		z-index: 1;
+	}
 }
 

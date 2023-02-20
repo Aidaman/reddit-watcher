@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { postsIsLoadingMoreSelector } from './../../../store/posts/posts.selectors';
 import { removePostAction } from '../../../store/posts/posts.actions';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -17,17 +19,7 @@ export class PostsComponent {
 	private readonly postsService: PostsService = inject(PostsService);
 	private readonly store: Store = inject(Store);
 
-	public getStarIcon(postId: string): string {
-		const category: LocalStoragePostsCategory = LocalStoragePostsCategory.favorites;
-		return this.postsService.isPostPresentInList(postId, category) ? 'star' : 'star-outline';
-	}
-
-	public getTrashIcon(postId: string): string {
-		const category: LocalStoragePostsCategory = LocalStoragePostsCategory.banned;
-		return this.postsService.isPostPresentInList(postId, category)
-			? 'trash-bin'
-			: 'trash-bin-outline';
-	}
+	public isLoadingMorePosts$: Observable<boolean> = this.store.select(postsIsLoadingMoreSelector);
 
 	public swipeLeft(post: IPost): void {
 		const favorites: LocalStoragePostsCategory = LocalStoragePostsCategory.favorites;

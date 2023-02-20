@@ -13,6 +13,11 @@ export const postsIsLoadingSelector = createSelector(
 	(postState: IPostsState) => postState.isLoading
 );
 
+export const postsIsLoadingMoreSelector = createSelector(
+	postsFeatureSelector,
+	(postState: IPostsState) => postState.isLoadingMore
+);
+
 export const postsHasValueSelector = createSelector(
 	postsFeatureSelector,
 	(postState: IPostsState) => postState.hasValue

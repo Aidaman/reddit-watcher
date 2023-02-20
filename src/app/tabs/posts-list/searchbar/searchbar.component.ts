@@ -8,6 +8,7 @@ import {
 	subredditIsLoadingSelector,
 	subredditsSelector,
 } from 'src/app/store/subreddits/subreddit.selectors';
+import { SubredditService } from 'src/app/shared/services/subreddit.service';
 
 @Component({
 	selector: 'app-searchbar',
@@ -19,13 +20,14 @@ export class SearchbarComponent implements OnDestroy {
 
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly store: Store = inject(Store);
+	private readonly subredditService: SubredditService = inject(SubredditService);
 	// private readonly httpService: HttpService = inject(HttpService);
 
 	private readonly emptySubreddit: ISubreddit = {
 		kind: 'NONE',
 		data: {
 			id: 'NONE',
-			display_name_prefixed: 'NONE',
+			display_name_prefixed: '',
 			icon_img: 'NONE',
 		},
 	};
@@ -59,6 +61,7 @@ export class SearchbarComponent implements OnDestroy {
 
 	public selectSubreddit(subreddit: ISubreddit): void {
 		this.subredditSelected.emit(subreddit);
+		this.subredditService.subredditName.next(subreddit.data.display_name_prefixed.slice(2));
 	}
 
 	public randomSubreddit(): void {
