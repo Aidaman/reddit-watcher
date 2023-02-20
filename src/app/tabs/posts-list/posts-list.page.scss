@@ -1,0 +1,11 @@
+@import 'src/app/tabs/shared/common-styles.scss';
+
+ion-title {
+	@include styled-ion-title();
+}
+
+app-loader {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}

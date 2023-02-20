@@ -1,0 +1,26 @@
+.search-wrapper {
+	display: flex;
+
+	.group {
+		position: relative;
+		flex-grow: 2;
+
+		app-loader {
+			position: absolute;
+			top: -16px;
+			right: 6%;
+		}
+
+	}
+
+	ion-list {
+		top: 25%;
+		overflow-y: auto;
+		max-height: 350px;
+		min-height: 50px;
+
+		ion-item {
+			width: 100%;
+		}
+	}
+}

@@ -1,0 +1,9 @@
+
+<div class="subreddit">
+	<img *ngIf="iconThumbIsAvailable"
+		 class="subreddit__icon"
+		 [src]="subreddit.data.icon_img"
+		 alt="">
+	<p class="subreddit__title">{{subreddit.data.display_name_prefixed}}</p>
+</div>
+

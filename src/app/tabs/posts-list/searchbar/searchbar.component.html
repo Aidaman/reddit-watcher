@@ -1,0 +1,15 @@
+<div class="search-wrapper" [formGroup]="form">
+	<div class="group">
+		<ion-searchbar formControlName="subredditName" showCancelButton="focus"></ion-searchbar>
+		<ion-list *ngIf="subreddits$ | async as subreddits">
+			<ion-item *ngFor="let subreddit of subreddits" (click)="selectSubreddit(subreddit)">
+				<app-subreddit-item [subreddit]="subreddit"></app-subreddit-item>
+				<!-- <p class="subreddit__title">{{subreddit.data.display_name_prefixed}}</p> -->
+			</ion-item>
+		</ion-list>
+		<app-loader *ngIf="isSubredditLoading$ | async"></app-loader>
+	</div>
+	<ion-button (click)="randomSubreddit()">
+		random
+	</ion-button>
+</div>

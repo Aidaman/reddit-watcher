@@ -1,0 +1,5 @@
+@import 'src/app/tabs/shared/common-styles.scss';
+
+ion-title {
+	@include styled-ion-title();
+}

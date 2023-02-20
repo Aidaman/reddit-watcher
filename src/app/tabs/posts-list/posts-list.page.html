@@ -1,0 +1,16 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Posts r/{{subredditName | async}}
+    </ion-title>
+	<app-searchbar (subredditSelected)="onSelectedSubreddit($event)"></app-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+	<app-loader *ngIf="isPostsLoading$ | async; else loaded"></app-loader>
+	<ng-template #loaded>
+		<app-posts [posts]="posts$ | async"></app-posts>
+	</ng-template>
+</ion-content>

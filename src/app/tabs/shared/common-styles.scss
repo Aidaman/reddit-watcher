@@ -1,0 +1,11 @@
+@mixin styled-ion-title {
+	font-size: 24px;
+	padding: 8px 16px;
+	text-align: center;
+	cursor: pointer;
+}
+
+@mixin list-item-hover {
+	cursor: pointer;
+	background: #333;
+}
