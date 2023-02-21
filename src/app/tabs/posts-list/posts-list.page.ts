@@ -9,7 +9,11 @@ import { Observable, tap, map, BehaviorSubject } from 'rxjs';
 import { IPost } from 'src/app/shared/models/IPost';
 import { Store } from '@ngrx/store';
 import { ISubreddit } from 'src/app/shared/models/ISubreddit';
-import { postsIsLoadingSelector, postsSelector } from 'src/app/store/posts/posts.selectors';
+import {
+	postsIsLoadingMoreSelector,
+	postsIsLoadingSelector,
+	postsSelector,
+} from 'src/app/store/posts/posts.selectors';
 import { SubredditService } from 'src/app/shared/services/subreddit.service';
 
 @Component({
@@ -24,34 +28,34 @@ export class SimplePostsList implements OnInit {
 	public posts$: Observable<IPost[]> = this.store.select(postsSelector);
 	public isPostsLoading$: Observable<boolean> = this.store.select(postsIsLoadingSelector);
 
-	public subredditName: BehaviorSubject<string> = this.subredditService.subredditName;
+	public subredditName: BehaviorSubject<{ name: string; isRandom?: boolean }> =
+		this.subredditService.subredditName;
 
 	public ngOnInit(): void {
 		this.resetPosts();
 	}
 
-	public onSelectedSubreddit(subreddit: ISubreddit | 'random') {
-		this.store.dispatch(resetSubredditsAction());
-
-		if (subreddit === 'random') {
-			this.store.dispatch(fetchPostsAction({ subredditName: 'random', isRandom: true }));
-			return;
-		}
-
-		const subredditName = subreddit.data.display_name_prefixed;
-		this.store.dispatch(selectSubredditAction({ subreddit }));
-
+	public onSelectedSubreddit(subreddit: ISubreddit): void {
 		if (subreddit.kind === 'NONE') {
 			this.resetPosts();
 			return;
 		}
 
-		this.subredditService.subredditName.next(subredditName.slice(2));
+		this.store.dispatch(resetSubredditsAction());
+
+		const subredditName = subreddit.data.display_name_prefixed;
+		this.store.dispatch(selectSubredditAction({ subreddit }));
+
+		this.subredditService.subredditName.next({ name: subredditName.slice(2) });
 		this.store.dispatch(fetchPostsAction({ subredditName }));
 	}
 
+	public onRandomSubreddit(): void {
+		this.store.dispatch(fetchPostsAction({ subredditName: 'random', isRandom: true }));
+	}
+
 	public resetPosts(): void {
-		this.subredditService.subredditName.next('');
+		this.subredditService.subredditName.next({ name: '' });
 		this.store.dispatch(fetchPostsAction({ subredditName: null }));
 		// this.store.dispatch(unselectSubredditAction());
 	}

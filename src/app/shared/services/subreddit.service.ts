@@ -9,10 +9,11 @@ import { BehaviorSubject } from 'rxjs';
 export class SubredditService {
 	private readonly store: Store = inject(Store);
 
-	public subredditName: BehaviorSubject<string> = new BehaviorSubject<string>('');
+	public subredditName: BehaviorSubject<{ name: string; isRandom?: boolean }> =
+		new BehaviorSubject<{ name: string; isRandom?: boolean }>({ name: '' });
 
 	public searchSubredditQuerry(subredditName: string) {
-		this.subredditName.next(subredditName);
+		this.subredditName.next({ name: '' });
 		this.store.dispatch(searchSubredditAction({ subredditName }));
 	}
 }

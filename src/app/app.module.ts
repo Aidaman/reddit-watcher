@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SubredditEffect } from './store/subreddits/subreddit.effect';
 import { subredditReducer } from './store/subreddits/subreddit.reducer';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,17 +15,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PostsEffect } from './store/posts/posts.effect';
 import { postsReducer } from './store/posts/posts.reducer';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
 	declarations: [AppComponent],
 	imports: [
 		BrowserModule,
-		// BrowserAnimationsModule,
 		HttpClientModule,
 		IonicModule.forRoot(),
 		AppRoutingModule,
 		HammerModule,
+		BrowserAnimationsModule,
 
 		StoreModule.forRoot({ posts: postsReducer, subreddit: subredditReducer }),
 		EffectsModule.forRoot([PostsEffect, SubredditEffect]),

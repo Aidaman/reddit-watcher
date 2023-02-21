@@ -1,19 +1,20 @@
+import { SubredditService } from 'src/app/shared/services/subreddit.service';
 import { ISubreddit } from './../models/ISubreddit';
 import { IPost } from '../models/IPost';
 import { IRawResponseData } from '../models/IRawResposeData';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class HttpService {
 	private readonly http: HttpClient = inject(HttpClient);
+	private readonly subredditService: SubredditService = inject(SubredditService);
 	private readonly redditHomepage: string = 'https://www.reddit.com/';
 
-	public getHomepagePosts(lastPostName?: string, limit?: number): Observable<IPost[]> {
+	public getHomepagePosts(): Observable<IPost[]> {
 		return this.http
 			.get<IRawResponseData>(`${this.redditHomepage}.json`)
 			.pipe(map((value: IRawResponseData) => value.data.children)) as Observable<IPost[]>;
@@ -30,27 +31,17 @@ export class HttpService {
 		afterPostName: string,
 		limit: number
 	): Observable<IPost[]> {
-		const params: HttpParams = new HttpParams();
-		params.set('after', afterPostName);
-		params.set('limit', limit);
-
 		return this.http
-			.get<IRawResponseData>(`${this.redditHomepage}${subredditName}.json`, {
-				params: params,
+			.get<IRawResponseData>(`${this.redditHomepage}r/${subredditName}.json`, {
+				params: new HttpParams().set('after', afterPostName).set('limit', limit),
 			})
 			.pipe(map((value: IRawResponseData) => value.data.children)) as Observable<IPost[]>;
 	}
 
 	public getMoreHomepagePosts(lastPostName: string, limit: number): Observable<IPost[]> {
-		const params: HttpParams = new HttpParams();
-		if (lastPostName && limit) {
-			params.set('after', lastPostName);
-			params.set('limit', limit);
-		}
-
 		return this.http
 			.get<IRawResponseData>(`${this.redditHomepage}.json`, {
-				params: params,
+				params: new HttpParams().set('after', lastPostName).set('limit', limit),
 			})
 			.pipe(map((value: IRawResponseData) => value.data.children)) as Observable<IPost[]>;
 	}
@@ -67,7 +58,7 @@ export class HttpService {
 
 	public getRandomSubredditPosts(): Observable<IPost[]> {
 		return this.http
-			.get<IRawResponseData>(`https://corsproxy.io/?http://www.reddit.com/r/random/.json`)
+			.get<IRawResponseData>(`https://corsproxy.io/?${this.redditHomepage}r/random/.json`)
 			.pipe(map((value: IRawResponseData) => value.data.children)) as Observable<IPost[]>;
 	}
 }

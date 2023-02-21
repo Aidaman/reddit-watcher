@@ -58,11 +58,23 @@ export class PostsService {
 		}
 	}
 
-	public excludeBannedPosts(originalPosts: IPost[]): IPost[] {
+	private excludeBannedPosts(originalPosts: IPost[]): IPost[] {
 		const bannedPosts: IPost[] = this.bannedPostsSource.getValue();
 		return originalPosts.filter(
 			(post: IPost) => !bannedPosts.some(p => p.data.id === post.data.id)
 		);
+	}
+
+	private defineFavoritePosts(originalPosts: IPost[]): IPost[] {
+		const favoritePosts: IPost[] = this.favoritePostsSource.getValue();
+		return originalPosts.map(post => {
+			const isFavorite = favoritePosts.findIndex(p => p.data.id === post.data.id) !== -1;
+			return { ...post, isFavorite: isFavorite } as IPost;
+		});
+	}
+
+	public mapPosts(originalPosts: IPost[]): IPost[] {
+		return this.defineFavoritePosts(this.excludeBannedPosts(originalPosts));
 	}
 
 	public isPostPresentInList(postId: string, list: IPost[] | LocalStoragePostsCategory): boolean {

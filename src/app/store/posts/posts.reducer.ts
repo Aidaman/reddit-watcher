@@ -10,6 +10,7 @@ import {
 	fetchMorePostsAction,
 	fetchMorePostsFailureAction,
 	fetchMorePostsSuccessAction,
+	toggleIsPostFavoriteAction,
 } from './posts.actions';
 
 export interface IPostsState {
@@ -32,7 +33,7 @@ const addPost = (post: IPost, list: IPost[]): IPost[] => {
 	return res;
 };
 
-const addPosts = (posts: IPost[], list: IPost[]) => {
+const addPosts = (posts: IPost[], list: IPost[]): IPost[] => {
 	if (posts[0].data.id === list[0].data.id) return list;
 
 	const res: IPost[] = [...list];
@@ -42,6 +43,11 @@ const addPosts = (posts: IPost[], list: IPost[]) => {
 
 const removePost = (post: IPost, list: IPost[]): IPost[] =>
 	[...list].filter(p => p.data.id !== post.data.id);
+
+const toggleIsPostFavorite = (postId: string, list: IPost[]): IPost[] =>
+	[...list].map(post =>
+		post.data.id === postId ? ({ ...post, isFavorite: !post.isFavorite } as IPost) : post
+	);
 
 export const postsReducer = createReducer(
 	initialState,
@@ -88,5 +94,10 @@ export const postsReducer = createReducer(
 	on(removePostAction, (state, action) => ({
 		...state,
 		posts: removePost(action.post, state.posts),
+	})),
+
+	on(toggleIsPostFavoriteAction, (state, action) => ({
+		...state,
+		posts: toggleIsPostFavorite(action.postId, state.posts),
 	}))
 );

@@ -1,7 +1,6 @@
-import { PostsService } from 'src/app/shared/services/posts.service';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { IPost } from 'src/app/shared/models/IPost';
-import { LocalStoragePostsCategory } from 'src/app/shared/local-storage-posts-category';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
 	selector: 'app-post-item',
@@ -9,10 +8,13 @@ import { LocalStoragePostsCategory } from 'src/app/shared/local-storage-posts-ca
 	styleUrls: ['./post-item.component.scss'],
 })
 export class PostItemComponent {
+	@Output() public postBanned: EventEmitter<IPost> = new EventEmitter();
+	@Output() public postFavoritize: EventEmitter<IPost> = new EventEmitter();
 	@Input() public post: IPost = {
-		kind: 'StdVal',
+		kind: 't3',
 		data: {
 			id: 'StdVal',
+			name: 't3_StdVal',
 			author: 'NoAuthor',
 			subreddit_name_prefixed: 'r/empty-subreddit-value',
 			title: 'StdTitle',
@@ -22,16 +24,9 @@ export class PostItemComponent {
 			thumbnail_height: null,
 			thumbnail_width: null,
 		},
+		isFavorite: false,
+		removePost: false,
 	};
-
-	private readonly postsService: PostsService = inject(PostsService);
-
-	public get isFavorite(): boolean {
-		return this.postsService.isPostPresentInList(
-			this.post.data.id,
-			LocalStoragePostsCategory.favorites
-		);
-	}
 
 	public get thumbnailIsAvailable(): boolean {
 		const thumbnailHasDimensions: boolean =
@@ -39,5 +34,23 @@ export class PostItemComponent {
 		const thumbnailIsURL: boolean = this.post.data.thumbnail.includes('https://');
 
 		return thumbnailHasDimensions && thumbnailIsURL;
+	}
+
+	public ban(post: IPost): void {
+		this.postBanned.emit(post);
+	}
+
+	public favoritize(post: IPost): void {
+		this.postFavoritize.emit(post);
+	}
+
+	public slide(event: any): void {
+		const side = event.detail.side;
+		if (side === 'start') {
+			this.ban(this.post);
+			return;
+		}
+
+		this.favoritize(this.post);
 	}
 }

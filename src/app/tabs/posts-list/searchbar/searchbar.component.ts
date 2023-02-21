@@ -16,7 +16,8 @@ import { SubredditService } from 'src/app/shared/services/subreddit.service';
 	styleUrls: ['./searchbar.component.scss'],
 })
 export class SearchbarComponent implements OnDestroy {
-	@Output() public subredditSelected: EventEmitter<ISubreddit | 'random'> = new EventEmitter();
+	@Output() public subredditSelected: EventEmitter<ISubreddit> = new EventEmitter();
+	@Output() public randomSubredditSelected: EventEmitter<void> = new EventEmitter();
 
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly store: Store = inject(Store);
@@ -61,10 +62,11 @@ export class SearchbarComponent implements OnDestroy {
 
 	public selectSubreddit(subreddit: ISubreddit): void {
 		this.subredditSelected.emit(subreddit);
-		this.subredditService.subredditName.next(subreddit.data.display_name_prefixed.slice(2));
+		const name: string = subreddit.data.display_name_prefixed.slice(2);
+		this.subredditService.subredditName.next({ name });
 	}
 
 	public randomSubreddit(): void {
-		this.subredditSelected.emit('random');
+		this.randomSubredditSelected.emit();
 	}
 }

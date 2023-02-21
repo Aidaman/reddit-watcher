@@ -13,7 +13,7 @@ export class TabsPage {
 	private readonly subredditService: SubredditService = inject(SubredditService);
 
 	public fetchPosts(): void {
-		const subredditName: string = 'r/' + this.subredditService.subredditName.getValue();
+		const subredditName: string = 'r/' + this.subredditService.subredditName.getValue().name;
 		if (subredditName && subredditName !== 'r/') {
 			this.store.dispatch(fetchPostsAction({ subredditName }));
 			return;

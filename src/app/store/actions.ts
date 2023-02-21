@@ -8,7 +8,8 @@ export enum PostsActions {
 	FETCH_MORE_POSTS_FAILURE = '[posts] fetch more posts failure',
 
 	ADD_POST = '[posts] add post',
-	REMOVE_POST = '[posts] add post',
+	REMOVE_POST = '[posts] remove post',
+	TOGGLE_IS_POST_FAVORITE = '[posts] toggle isFavorite property',
 }
 
 export enum SubredditActions {

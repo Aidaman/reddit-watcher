@@ -1,3 +1,4 @@
+import { toggleIsPostFavoriteAction } from './../../../store/posts/posts.actions';
 import { Observable } from 'rxjs';
 import { postsIsLoadingMoreSelector } from './../../../store/posts/posts.selectors';
 import { removePostAction } from '../../../store/posts/posts.actions';
@@ -6,12 +7,18 @@ import { Store } from '@ngrx/store';
 import { LocalStoragePostsCategory } from 'src/app/shared/local-storage-posts-category';
 import { IPost } from 'src/app/shared/models/IPost';
 import { PostsService } from 'src/app/shared/services/posts.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
 	selector: 'app-posts',
 	templateUrl: './posts.component.html',
 	styleUrls: ['./posts.component.scss'],
-	animations: [],
+	animations: [
+		trigger('post-remove', [
+			state('open', style({})),
+			transition(':leave', [animate(300, style({ transform: 'translateX(100%' }))]),
+		]),
+	],
 })
 export class PostsComponent {
 	@Input() public posts: IPost[] | null = [];
@@ -21,12 +28,14 @@ export class PostsComponent {
 
 	public isLoadingMorePosts$: Observable<boolean> = this.store.select(postsIsLoadingMoreSelector);
 
-	public swipeLeft(post: IPost): void {
+	public onPostFavoritize(post: IPost): void {
 		const favorites: LocalStoragePostsCategory = LocalStoragePostsCategory.favorites;
 		const isPostFavorite: boolean = this.postsService.isPostPresentInList(
 			post.data.id,
 			favorites
 		);
+
+		this.store.dispatch(toggleIsPostFavoriteAction({ postId: post.data.id }));
 
 		if (!isPostFavorite) {
 			this.postsService.addPost(favorites, post);
@@ -41,7 +50,7 @@ export class PostsComponent {
 		if (isPostBanned) this.postsService.removePost(banned, post);
 	}
 
-	public swipeRight(post: IPost): void {
+	public onPostBanned(post: IPost): void {
 		const category: LocalStoragePostsCategory = LocalStoragePostsCategory.banned;
 		const isPostInList: boolean = this.postsService.isPostPresentInList(post.data.id, category);
 		this.store.dispatch(removePostAction({ post }));

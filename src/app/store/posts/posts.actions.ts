@@ -29,3 +29,8 @@ export const fetchMorePostsFailureAction = createAction(PostsActions.FETCH_MORE_
 export const addPostAction = createAction(PostsActions.ADD_POST, props<{ post: IPost }>());
 
 export const removePostAction = createAction(PostsActions.REMOVE_POST, props<{ post: IPost }>());
+
+export const toggleIsPostFavoriteAction = createAction(
+	PostsActions.TOGGLE_IS_POST_FAVORITE,
+	props<{ postId: string }>()
+);

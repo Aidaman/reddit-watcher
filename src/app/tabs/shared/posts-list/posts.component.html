@@ -1,9 +1,6 @@
 <ion-list appScrollTrack>
-  <ion-item *ngFor="let post of posts" (swipeleft)="swipeLeft(post)" (swiperight)="swipeRight(post)">
-	<div class="wrapper">
-		<app-post-item [post]="post"></app-post-item>
-	</div>
-  </ion-item>
+	<app-post-item *ngFor="let post of posts" [post]="post" (postBanned)="onPostBanned($event)"
+		(postFavoritize)="onPostFavoritize($event)"></app-post-item>
 
-  <app-loader *ngIf="isLoadingMorePosts$ | async"></app-loader>
+	<app-loader *ngIf="isLoadingMorePosts$ | async"></app-loader>
 </ion-list>
