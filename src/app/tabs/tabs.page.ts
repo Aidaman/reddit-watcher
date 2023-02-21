@@ -14,6 +14,16 @@ export class TabsPage {
 
 	public fetchPosts(): void {
 		const subredditName: string = 'r/' + this.subredditService.subredditName.getValue().name;
+		const isRandom: boolean | undefined =
+			this.subredditService.subredditName.getValue().isRandom;
+
+		console.log(isRandom);
+
+		if (isRandom) {
+			this.store.dispatch(fetchPostsAction({ subredditName: null }));
+			this.subredditService.subredditName.next({ name: '', isRandom: false });
+			return;
+		}
 		if (subredditName && subredditName !== 'r/') {
 			this.store.dispatch(fetchPostsAction({ subredditName }));
 			return;
