@@ -1,19 +1,12 @@
 import { resetSubredditsAction } from './../../store/subreddits/subreddit.actions';
-import {
-	selectSubredditAction,
-	unselectSubredditAction,
-} from 'src/app/store/subreddits/subreddit.actions';
+import { selectSubredditAction } from 'src/app/store/subreddits/subreddit.actions';
 import { fetchPostsAction } from '../../store/posts/posts.actions';
 import { Component, inject, OnInit } from '@angular/core';
 import { Observable, tap, map, BehaviorSubject } from 'rxjs';
 import { IPost } from 'src/app/shared/models/IPost';
 import { Store } from '@ngrx/store';
 import { ISubreddit } from 'src/app/shared/models/ISubreddit';
-import {
-	postsIsLoadingMoreSelector,
-	postsIsLoadingSelector,
-	postsSelector,
-} from 'src/app/store/posts/posts.selectors';
+import { postsIsLoadingSelector, postsSelector } from 'src/app/store/posts/posts.selectors';
 import { SubredditService } from 'src/app/shared/services/subreddit.service';
 
 @Component({

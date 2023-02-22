@@ -17,8 +17,6 @@ export class TabsPage {
 		const isRandom: boolean | undefined =
 			this.subredditService.subredditName.getValue().isRandom;
 
-		console.log(isRandom);
-
 		if (isRandom) {
 			this.store.dispatch(fetchPostsAction({ subredditName: null }));
 			this.subredditService.subredditName.next({ name: '', isRandom: false });

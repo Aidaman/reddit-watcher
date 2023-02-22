@@ -9,7 +9,12 @@
 		</ion-list>
 		<app-loader *ngIf="isSubredditLoading$ | async"></app-loader>
 	</div>
-	<ion-button (click)="randomSubreddit()">
+	<ion-button *ngIf="!(curentSubredditName$ | async)?.isRandom; else returnHomeButton" (click)="randomSubreddit()">
 		random
 	</ion-button>
+	<ng-template #returnHomeButton>
+		<ion-button (click)="returnHome()">
+			Home
+		</ion-button>
+	</ng-template>
 </div>

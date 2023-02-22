@@ -1,3 +1,4 @@
+import { toggleIsPostFavoriteAction } from './../../store/posts/posts.actions';
 import { addPostAction } from '../../store/posts/posts.actions';
 import { IPost } from '../models/IPost';
 import { inject, Injectable } from '@angular/core';
@@ -40,18 +41,27 @@ export class PostsService {
 		if (category === LocalStoragePostsCategory.banned) this.bannedPostsSource.next(value);
 	}
 
-	private togglePostCategory(post: IPost, action: PostBanAction): void {
+	private togglePostCategory(post: IPost, action: PostBanAction, isFavorite?: boolean): void {
 		switch (action) {
 			case PostBanAction.favoritize:
 				this.removePost(LocalStoragePostsCategory.banned, post);
+				this.store.dispatch(
+					toggleIsPostFavoriteAction({ postId: post.data.id, isFavorite: true })
+				);
 				break;
 			case PostBanAction.ban:
 				this.removePost(LocalStoragePostsCategory.favorites, post);
+				this.store.dispatch(
+					toggleIsPostFavoriteAction({ postId: post.data.id, isFavorite: false })
+				);
 				break;
 			case PostBanAction.unban:
 				this.removePost(LocalStoragePostsCategory.favorites, post, true);
 				this.removePost(LocalStoragePostsCategory.banned, post);
 				this.store.dispatch(addPostAction({ post }));
+				this.store.dispatch(
+					toggleIsPostFavoriteAction({ postId: post.data.id, isFavorite })
+				);
 				break;
 			default:
 				break;
@@ -107,6 +117,7 @@ export class PostsService {
 			this.updateLocalStorage(category, newPosts);
 		}
 
-		if (postIsPresentInList && isUnban) this.togglePostCategory(post, PostBanAction.unban);
+		if (postIsPresentInList && isUnban)
+			this.togglePostCategory(post, PostBanAction.unban, isUnban);
 	}
 }

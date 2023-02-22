@@ -32,5 +32,5 @@ export const removePostAction = createAction(PostsActions.REMOVE_POST, props<{ p
 
 export const toggleIsPostFavoriteAction = createAction(
 	PostsActions.TOGGLE_IS_POST_FAVORITE,
-	props<{ postId: string }>()
+	props<{ postId: string; isFavorite?: boolean }>()
 );

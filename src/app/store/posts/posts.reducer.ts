@@ -44,10 +44,14 @@ const addPosts = (posts: IPost[], list: IPost[]): IPost[] => {
 const removePost = (post: IPost, list: IPost[]): IPost[] =>
 	[...list].filter(p => p.data.id !== post.data.id);
 
-const toggleIsPostFavorite = (postId: string, list: IPost[]): IPost[] =>
-	[...list].map(post =>
-		post.data.id === postId ? ({ ...post, isFavorite: !post.isFavorite } as IPost) : post
-	);
+const toggleIsPostFavorite = (postId: string, list: IPost[], isFavorite?: boolean): IPost[] =>
+	[...list].map(post => {
+		if (post.data.id === postId && isFavorite) return { ...post, isFavorite: isFavorite };
+
+		if (post.data.id === postId) return { ...post, isFavorite: !post.isFavorite } as IPost;
+
+		return post;
+	});
 
 export const postsReducer = createReducer(
 	initialState,
@@ -98,6 +102,6 @@ export const postsReducer = createReducer(
 
 	on(toggleIsPostFavoriteAction, (state, action) => ({
 		...state,
-		posts: toggleIsPostFavorite(action.postId, state.posts),
+		posts: toggleIsPostFavorite(action.postId, state.posts, action.isFavorite),
 	}))
 );

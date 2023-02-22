@@ -33,6 +33,9 @@ export class SearchbarComponent implements OnDestroy {
 		},
 	};
 
+	public curentSubredditName$: Observable<{ name: string; isRandom?: boolean }> =
+		this.subredditService.subredditName.asObservable();
+
 	public isSubredditLoading$: Observable<boolean> = this.store.select(subredditIsLoadingSelector);
 
 	public form: FormGroup = this.formBuilder.group({
@@ -64,6 +67,10 @@ export class SearchbarComponent implements OnDestroy {
 		this.subredditSelected.emit(subreddit);
 		const name: string = subreddit.data.display_name_prefixed.slice(2);
 		this.subredditService.subredditName.next({ name });
+	}
+
+	public returnHome() {
+		this.selectSubreddit(this.emptySubreddit);
 	}
 
 	public randomSubreddit(): void {

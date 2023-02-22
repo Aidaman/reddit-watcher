@@ -1,6 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { IPost } from 'src/app/shared/models/IPost';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
 	selector: 'app-post-item',

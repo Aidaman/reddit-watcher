@@ -1,24 +1,27 @@
-import { toggleIsPostFavoriteAction } from './../../../store/posts/posts.actions';
 import { Observable } from 'rxjs';
 import { postsIsLoadingMoreSelector } from './../../../store/posts/posts.selectors';
 import { removePostAction } from '../../../store/posts/posts.actions';
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LocalStoragePostsCategory } from 'src/app/shared/local-storage-posts-category';
 import { IPost } from 'src/app/shared/models/IPost';
 import { PostsService } from 'src/app/shared/services/posts.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { animate, query, stagger, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
 	selector: 'app-posts',
 	templateUrl: './posts.component.html',
 	styleUrls: ['./posts.component.scss'],
-	animations: [
-		trigger('post-remove', [
-			state('open', style({})),
-			transition(':leave', [animate(300, style({ transform: 'translateX(100%' }))]),
-		]),
-	],
+	// animations: [
+	// 	trigger('post-remove', [
+	// 		transition('* <=> *', [
+	// 			query(':leave', animate('200ms', style({ transform: 'translateX(-100%)' })), {
+	// 				optional: true,
+	// 			}),
+	// 		]),
+	// 	]),
+	// ],
+	// animations is a pain
 })
 export class PostsComponent {
 	@Input() public posts: IPost[] | null = [];
@@ -34,8 +37,6 @@ export class PostsComponent {
 			post.data.id,
 			favorites
 		);
-
-		this.store.dispatch(toggleIsPostFavoriteAction({ postId: post.data.id }));
 
 		if (!isPostFavorite) {
 			this.postsService.addPost(favorites, post);
